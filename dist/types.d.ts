@@ -1,4 +1,4 @@
-import { RequestEnvelope, ResponseEnvelope } from 'ask-sdk-model';
+import { interfaces, RequestEnvelope, ResponseEnvelope } from 'ask-sdk-model';
 export interface SkillSettings {
     /** The skill id */
     appId: string;
@@ -18,6 +18,7 @@ export interface InterfaceSettings {
     audio?: boolean;
     video?: boolean;
     apl?: boolean;
+    geolocation?: interfaces.geolocation.GeolocationState;
 }
 export interface SequenceItem {
     /** The request to run. Generate these with one of the above `getFooRequest` methods. */

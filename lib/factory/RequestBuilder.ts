@@ -44,6 +44,9 @@ export abstract class RequestBuilder {
         if (iface.hasOwnProperty('video')) {
             this.settings.interfaces.video = iface.video;
         }
+        if (iface.hasOwnProperty('geolocation')) {
+            this.settings.interfaces.geolocation = iface.geolocation;
+        }
         return this;
     }
 
@@ -91,6 +94,10 @@ export abstract class RequestBuilder {
         }
         if (this.settings.interfaces.apl) {
             ctx.System.device.supportedInterfaces['Alexa.Presentation.APL'] = {runtime: {maxVersion: '1.0'}};
+        }
+        if (this.settings.interfaces.geolocation) {
+            ctx.System.device.supportedInterfaces.Geolocation = {};
+            ctx.Geolocation = this.settings.interfaces.geolocation;
         }
         return ctx;
     }

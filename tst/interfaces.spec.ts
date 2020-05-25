@@ -31,4 +31,9 @@ describe('Tests for request builder with interfaces', () => {
         expect(request.context.System.device.supportedInterfaces).to.have.property('Display');
     });
 
+    it('should have Geolocation when activated', () => {
+        const request = new LaunchRequestBuilder(skillSettings).withInterfaces({ geolocation: {} }).build();
+        expect(request.context.System.device.supportedInterfaces).to.have.property('Geolocation');
+    });
+
 });
