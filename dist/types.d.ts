@@ -80,6 +80,8 @@ export interface SequenceItem {
     hasLargeImageUrlLike?: string;
     /** If true, tests that the card sent by the response is a LinkAccount card. */
     hasLinkAccountCard?: boolean;
+    /** Tests that the card sent by the response is requesting the given permissions. */
+    hasAskForPermissionsConsentCard?: string[];
     /** Tests that the AudioPlayer is used to play a stream. */
     playsStream?: PlayStreamConfig;
     /** Tests that the AudioPlayer is stopped. */

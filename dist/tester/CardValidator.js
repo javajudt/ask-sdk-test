@@ -19,6 +19,7 @@ class CardValidator extends types_1.ResponseValidator {
     hasSmallImageUrlLike? : string;
     hasLargeImageUrlLike? : string;
     hasLinkAccountCard? : boolean;
+    hasAskForPermissionsConsentCard? : string[];
          */
         if (currentItem.hasCardTitle) {
             if (!response.response.card || (response.response.card.type !== 'Simple' && response.response.card.type !== 'Standard')) {
@@ -106,6 +107,17 @@ class CardValidator extends types_1.ResponseValidator {
             }
             else if (response.response.card.type !== 'LinkAccount') {
                 assert_1.fail('the card in the response was not a link account card');
+            }
+        }
+        if (currentItem.hasAskForPermissionsConsentCard) {
+            if (!response.response.card) {
+                assert_1.fail('the response did not contain a card');
+            }
+            else if (response.response.card.type !== 'AskForPermissionsConsent') {
+                assert_1.fail('the card in the response was not an ask for permissions consent card');
+            }
+            else {
+                chai_1.expect(response.response.card.permissions).to.have.members(currentItem.hasAskForPermissionsConsentCard);
             }
         }
     }

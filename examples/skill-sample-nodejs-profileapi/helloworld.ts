@@ -24,7 +24,14 @@ class LaunchRequestHandler implements RequestHandler {
             const speechText = `Hello, ${givenName} ${name}. Your e-mail is ${email} and your phone number is ${mobile}`;
             return handlerInput.responseBuilder.speak(speechText).getResponse();
         } catch (e) {
-            return handlerInput.responseBuilder.speak('Hello, world! I am not allowed to view your profile.').getResponse();
+            return handlerInput.responseBuilder
+                .speak('Hello, world! I am not allowed to view your profile.')
+                .withAskForPermissionsConsentCard([
+                    'alexa::profile:name:read', 
+                    'alexa::profile:email:read', 
+                    'alexa::profile:mobile_number:read'
+                ])
+                .getResponse();
         }
     }
 

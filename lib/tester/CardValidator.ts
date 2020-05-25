@@ -20,6 +20,7 @@ export class CardValidator extends ResponseValidator {
     hasSmallImageUrlLike? : string;
     hasLargeImageUrlLike? : string;
     hasLinkAccountCard? : boolean;
+    hasAskForPermissionsConsentCard? : string[];
          */
 
         if (currentItem.hasCardTitle) {
@@ -99,6 +100,16 @@ export class CardValidator extends ResponseValidator {
                 fail('the response did not contain a card');
             } else if (response.response.card.type !== 'LinkAccount') {
                 fail('the card in the response was not a link account card');
+            }
+        }
+
+        if (currentItem.hasAskForPermissionsConsentCard) {
+            if (!response.response.card) {
+                fail('the response did not contain a card');
+            } else if (response.response.card.type !== 'AskForPermissionsConsent') {
+                fail('the card in the response was not an ask for permissions consent card');
+            } else {
+                expect(response.response.card.permissions).to.have.members(currentItem.hasAskForPermissionsConsentCard);
             }
         }
     }
