@@ -19,6 +19,7 @@ export class CardValidator extends ResponseValidator {
     hasCardTextLike? : string;
     hasSmallImageUrlLike? : string;
     hasLargeImageUrlLike? : string;
+    hasLinkAccountCard? : boolean;
          */
 
         if (currentItem.hasCardTitle) {
@@ -63,7 +64,7 @@ export class CardValidator extends ResponseValidator {
             if (!response.response.card) {
                 fail('the response did not contain a card');
             } else if (response.response.card.type !== 'Standard') {
-                fail('the card in the response was not a simple card');
+                fail('the card in the response was not a standard card');
             } else {
                 expect(response.response.card.text.indexOf(currentItem.hasCardTextLike) >= 0, 'Card text did not contain specified text').to.be.true;
             }
@@ -73,7 +74,7 @@ export class CardValidator extends ResponseValidator {
             if (!response.response.card) {
                 fail('the response did not contain a card');
             } else if (response.response.card.type !== 'Standard') {
-                fail('the card in the response was not a simple card');
+                fail('the card in the response was not a standard card');
             } else if (!response.response.card.image) {
                 fail('the card in the response did not contain an image');
             } else {
@@ -85,11 +86,19 @@ export class CardValidator extends ResponseValidator {
             if (!response.response.card) {
                 fail('the response did not contain a card');
             } else if (response.response.card.type !== 'Standard') {
-                fail('the card in the response was not a simple card');
+                fail('the card in the response was not a standard card');
             } else if (!response.response.card.image) {
                 fail('the card in the response did not contain an image');
             } else {
                 expect(response.response.card.image.largeImageUrl.indexOf(currentItem.hasLargeImageUrlLike) >= 0, 'Card large image did not contain specified URL').to.be.true;
+            }
+        }
+
+        if (currentItem.hasLinkAccountCard) {
+            if (!response.response.card) {
+                fail('the response did not contain a card');
+            } else if (response.response.card.type !== 'LinkAccount') {
+                fail('the card in the response was not a link account card');
             }
         }
     }
