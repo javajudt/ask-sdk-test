@@ -1,5 +1,7 @@
 
 ## current master
+* feat: add `hasLinkAccountCard` for account linking
+* fix: correct standard card error messages to say "standard card"
 
 ## 2.4.0
 * update libraries
