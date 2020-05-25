@@ -1,5 +1,6 @@
 
 ## current master
+* feat: add `hasAskForPermissionsConsentCard` for requesting permissions
 * feat: add `hasLinkAccountCard` for account linking
 * fix: correct standard card error messages to say "standard card"
 

@@ -39,6 +39,7 @@ describe('Hello World Skill Profile API', () => {
             {
                 request: new LaunchRequestBuilder(skillSettings).build(),
                 says: 'Hello, world! I am not allowed to view your profile.',
+                hasAskForPermissionsConsentCard: ['alexa::profile:name:read', 'alexa::profile:email:read', 'alexa::profile:mobile_number:read'],
                 repromptsNothing: true,
                 shouldEndSession: true,
             },
