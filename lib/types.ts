@@ -119,11 +119,18 @@ export interface PlayVideoConfig {
     subtitle? : string;
 }
 
+export type DistanceUnit = 'METRIC' | 'IMPERIAL';
+
+export type TemperatureUnit = 'CELSIUS' | 'FAHRENHEIT';
+
 export interface ProfileInfo {
     name? : string;
     givenName? : string;
     email? : string;
     mobileNumber? : string;
+    distanceUnits? : DistanceUnit;
+    temperatureUnits? : TemperatureUnit;
+    timeZone? : string;
 }
 
 export abstract class ResponseValidator {

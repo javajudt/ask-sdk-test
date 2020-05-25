@@ -26,8 +26,12 @@ describe('Hello World Skill Profile API', () => {
                     name: 'Smith',
                     email: 'john@smith.com',
                     mobileNumber: '+1234567890',
+                    distanceUnits: 'METRIC',
+                    temperatureUnits: 'CELSIUS',
+                    timeZone: 'Africa/Abidjan'
                 },
                 says: 'Hello, John Smith. Your e-mail is john@smith.com and your phone number is +1234567890',
+                hasCardContent: 'Distance Unit: METRIC\nTemperature Unit: CELSIUS\nTime Zone: Africa/Abidjan',
                 repromptsNothing: true,
                 shouldEndSession: true,
             },

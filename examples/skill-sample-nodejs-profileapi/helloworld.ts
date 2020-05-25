@@ -2,7 +2,7 @@
  * Copyright (c) 2018. Taimos GmbH http://www.taimos.de
  */
 
-import { DefaultApiClient, HandlerInput, RequestHandler, SkillBuilders } from 'ask-sdk';
+import { DefaultApiClient, HandlerInput, RequestHandler, SkillBuilders, getDeviceId } from 'ask-sdk';
 import { LambdaHandler } from 'ask-sdk-core/dist/skill/factory/BaseSkillFactory';
 import { Response } from 'ask-sdk-model';
 
@@ -20,10 +20,17 @@ class LaunchRequestHandler implements RequestHandler {
             const givenName = await upsServiceClient.getProfileGivenName();
             const email = await upsServiceClient.getProfileEmail();
             const mobile = await upsServiceClient.getProfileMobileNumber();
+            const distance = await upsServiceClient.getSystemDistanceUnits(getDeviceId(handlerInput.requestEnvelope));
+            const temperature = await upsServiceClient.getSystemTemperatureUnit(getDeviceId(handlerInput.requestEnvelope));
+            const timeZone = await upsServiceClient.getSystemTimeZone(getDeviceId(handlerInput.requestEnvelope));
 
             const speechText = `Hello, ${givenName} ${name}. Your e-mail is ${email} and your phone number is ${mobile}`;
-            return handlerInput.responseBuilder.speak(speechText).getResponse();
+            return handlerInput.responseBuilder
+                .speak(speechText)
+                .withSimpleCard("Hello World", `Distance Unit: ${distance}\nTemperature Unit: ${temperature}\nTime Zone: ${timeZone}`)
+                .getResponse();
         } catch (e) {
+            console.log(e)
             return handlerInput.responseBuilder
                 .speak('Hello, world! I am not allowed to view your profile.')
                 .withAskForPermissionsConsentCard([

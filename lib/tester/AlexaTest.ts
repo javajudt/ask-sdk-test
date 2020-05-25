@@ -41,11 +41,17 @@ AWSMOCK.mock('DynamoDB.DocumentClient', 'put', (params : PutItemInput, callback 
 });
 
 // Install UpsServiceClient mock
-const upsServiceMock : { getProfileName : () => string; getProfileGivenName : () => string; getProfileEmail : () => string; getProfileMobileNumber : () => string; } = {
+const upsServiceMock : {
+    getProfileName : () => string; getProfileGivenName : () => string; getProfileEmail : () => string; getProfileMobileNumber : () => string;
+    getSystemDistanceUnits : () => string; getSystemTemperatureUnit : () => string; getSystemTimeZone : () => string;
+} = {
     getProfileName: () => undefined,
     getProfileGivenName: () => undefined,
     getProfileEmail: () => undefined,
     getProfileMobileNumber: () => undefined,
+    getSystemDistanceUnits: () => undefined,
+    getSystemTemperatureUnit: () => undefined,
+    getSystemTimeZone: () => undefined,
 };
 
 export class AlexaTest {
@@ -210,7 +216,7 @@ export class AlexaTest {
     private invokeFunction(settings : TestSettings, currentItem : SequenceItem, request : RequestEnvelope) : Promise<any> {
         this.mockDynamoDB(settings, currentItem);
 
-        const interceptors = this.mockProfileAPI(currentItem);
+        const interceptors = this.mockProfileAPI(settings, currentItem);
 
         return lambdaLocal.execute({
             event: request,
@@ -263,12 +269,15 @@ export class AlexaTest {
         }
     }
 
-    private mockProfileAPI(currentItem : SequenceItem) : object[] {
+    private mockProfileAPI(settings : TestSettings, currentItem : SequenceItem) : object[] {
         const profileMock = nock('https://api.amazonalexa.com').persist();
         const nameInterceptor = profileMock.get('/v2/accounts/~current/settings/Profile.name');
         const givenNameInterceptor = profileMock.get('/v2/accounts/~current/settings/Profile.givenName');
         const emailInterceptor = profileMock.get('/v2/accounts/~current/settings/Profile.email');
         const mobileNumberInterceptor = profileMock.get('/v2/accounts/~current/settings/Profile.mobileNumber');
+        const distanceUnitInterceptor = profileMock.get(`/v2/devices/${settings.deviceId}/settings/System.distanceUnits`);
+        const temperatureUnitInterceptor = profileMock.get(`/v2/devices/${settings.deviceId}/settings/System.temperatureUnit`);
+        const timeZoneInterceptor = profileMock.get(`/v2/devices/${settings.deviceId}/settings/System.timeZone`);
 
         if (currentItem.withProfile && currentItem.withProfile.name) {
             nameInterceptor.reply(200, () => {
@@ -298,8 +307,29 @@ export class AlexaTest {
         } else {
             mobileNumberInterceptor.reply(401, {});
         }
+        if (currentItem.withProfile && currentItem.withProfile.distanceUnits) {
+            distanceUnitInterceptor.reply(200, () => {
+                return JSON.stringify(currentItem.withProfile.distanceUnits);
+            });
+        } else {
+            distanceUnitInterceptor.reply(401, {});
+        }
+        if (currentItem.withProfile && currentItem.withProfile.temperatureUnits) {
+            temperatureUnitInterceptor.reply(200, () => {
+                return JSON.stringify(currentItem.withProfile.temperatureUnits);
+            });
+        } else {
+            temperatureUnitInterceptor.reply(401, {});
+        }
+        if (currentItem.withProfile && currentItem.withProfile.timeZone) {
+            timeZoneInterceptor.reply(200, () => {
+                return JSON.stringify(currentItem.withProfile.timeZone);
+            });
+        } else {
+            timeZoneInterceptor.reply(401, {});
+        }
         return [
-            nameInterceptor, givenNameInterceptor, emailInterceptor, mobileNumberInterceptor,
+            nameInterceptor, givenNameInterceptor, emailInterceptor, mobileNumberInterceptor, distanceUnitInterceptor, temperatureUnitInterceptor, timeZoneInterceptor,
         ];
     }
 

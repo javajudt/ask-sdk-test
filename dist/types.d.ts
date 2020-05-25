@@ -109,11 +109,16 @@ export interface PlayVideoConfig {
     titel?: string;
     subtitle?: string;
 }
+export declare type DistanceUnit = 'METRIC' | 'IMPERIAL';
+export declare type TemperatureUnit = 'CELSIUS' | 'FAHRENHEIT';
 export interface ProfileInfo {
     name?: string;
     givenName?: string;
     email?: string;
     mobileNumber?: string;
+    distanceUnits?: DistanceUnit;
+    temperatureUnits?: TemperatureUnit;
+    timeZone?: string;
 }
 export declare abstract class ResponseValidator {
     abstract validate(currentItem: SequenceItem, response: ResponseEnvelope): void;

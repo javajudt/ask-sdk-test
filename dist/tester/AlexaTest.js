@@ -40,6 +40,9 @@ const upsServiceMock = {
     getProfileGivenName: () => undefined,
     getProfileEmail: () => undefined,
     getProfileMobileNumber: () => undefined,
+    getSystemDistanceUnits: () => undefined,
+    getSystemTemperatureUnit: () => undefined,
+    getSystemTimeZone: () => undefined,
 };
 class AlexaTest {
     constructor(handler, settings) {
@@ -180,7 +183,7 @@ class AlexaTest {
     }
     invokeFunction(settings, currentItem, request) {
         this.mockDynamoDB(settings, currentItem);
-        const interceptors = this.mockProfileAPI(currentItem);
+        const interceptors = this.mockProfileAPI(settings, currentItem);
         return lambdaLocal.execute({
             event: request,
             lambdaFunc: settings,
@@ -230,12 +233,15 @@ class AlexaTest {
             };
         }
     }
-    mockProfileAPI(currentItem) {
+    mockProfileAPI(settings, currentItem) {
         const profileMock = nock('https://api.amazonalexa.com').persist();
         const nameInterceptor = profileMock.get('/v2/accounts/~current/settings/Profile.name');
         const givenNameInterceptor = profileMock.get('/v2/accounts/~current/settings/Profile.givenName');
         const emailInterceptor = profileMock.get('/v2/accounts/~current/settings/Profile.email');
         const mobileNumberInterceptor = profileMock.get('/v2/accounts/~current/settings/Profile.mobileNumber');
+        const distanceUnitInterceptor = profileMock.get(`/v2/devices/${settings.deviceId}/settings/System.distanceUnits`);
+        const temperatureUnitInterceptor = profileMock.get(`/v2/devices/${settings.deviceId}/settings/System.temperatureUnit`);
+        const timeZoneInterceptor = profileMock.get(`/v2/devices/${settings.deviceId}/settings/System.timeZone`);
         if (currentItem.withProfile && currentItem.withProfile.name) {
             nameInterceptor.reply(200, () => {
                 return JSON.stringify(currentItem.withProfile.name);
@@ -268,8 +274,32 @@ class AlexaTest {
         else {
             mobileNumberInterceptor.reply(401, {});
         }
+        if (currentItem.withProfile && currentItem.withProfile.distanceUnits) {
+            distanceUnitInterceptor.reply(200, () => {
+                return JSON.stringify(currentItem.withProfile.distanceUnits);
+            });
+        }
+        else {
+            distanceUnitInterceptor.reply(401, {});
+        }
+        if (currentItem.withProfile && currentItem.withProfile.temperatureUnits) {
+            temperatureUnitInterceptor.reply(200, () => {
+                return JSON.stringify(currentItem.withProfile.temperatureUnits);
+            });
+        }
+        else {
+            temperatureUnitInterceptor.reply(401, {});
+        }
+        if (currentItem.withProfile && currentItem.withProfile.timeZone) {
+            timeZoneInterceptor.reply(200, () => {
+                return JSON.stringify(currentItem.withProfile.timeZone);
+            });
+        }
+        else {
+            timeZoneInterceptor.reply(401, {});
+        }
         return [
-            nameInterceptor, givenNameInterceptor, emailInterceptor, mobileNumberInterceptor,
+            nameInterceptor, givenNameInterceptor, emailInterceptor, mobileNumberInterceptor, distanceUnitInterceptor, temperatureUnitInterceptor, timeZoneInterceptor,
         ];
     }
 }
