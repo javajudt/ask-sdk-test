@@ -4,6 +4,7 @@
 * feat: add `hasLinkAccountCard` for account linking
 * fix: correct standard card error messages to say "standard card"
 * feat: support all UpsServiceClient calls by adding `distanceUnits`, `temperatureUnits`, and `timeZone` to `withProfile`
+* feat: add `withDeviceAddress` option to test DeviceAddressAPI
 
 ## 2.4.0
 * update libraries

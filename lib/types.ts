@@ -100,6 +100,8 @@ export interface SequenceItem {
     withProfile? : ProfileInfo;
     /** The accessToken to provide for account linking */
     withUserAccessToken? : string;
+    /** The device address information for API calls. DeviceAddress will be unauthorized when this is undefined */
+    withDeviceAddress? : DeviceAddressInfo;
 
     /** Any additional fields for custom validators */
     [key : string] : any;
@@ -131,6 +133,17 @@ export interface ProfileInfo {
     distanceUnits? : DistanceUnit;
     temperatureUnits? : TemperatureUnit;
     timeZone? : string;
+}
+
+export interface DeviceAddressInfo {
+    addressLine1? : string;
+    addressLine2? : string;
+    addressLine3? : string;
+    city? : string;
+    countryCode? : string;
+    districtOrCounty? : string;
+    postalCode? : string;
+    stateOrRegion? : string;
 }
 
 export abstract class ResponseValidator {

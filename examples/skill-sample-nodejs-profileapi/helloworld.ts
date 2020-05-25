@@ -30,7 +30,6 @@ class LaunchRequestHandler implements RequestHandler {
                 .withSimpleCard("Hello World", `Distance Unit: ${distance}\nTemperature Unit: ${temperature}\nTime Zone: ${timeZone}`)
                 .getResponse();
         } catch (e) {
-            console.log(e)
             return handlerInput.responseBuilder
                 .speak('Hello, world! I am not allowed to view your profile.')
                 .withAskForPermissionsConsentCard([

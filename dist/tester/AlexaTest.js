@@ -179,11 +179,13 @@ class AlexaTest {
     containsMockSettings(currentItem) {
         return currentItem.hasOwnProperty('storesAttributes') ||
             currentItem.hasOwnProperty('withProfile') ||
+            currentItem.hasOwnProperty('withDeviceAddress') ||
             currentItem.hasOwnProperty('withStoredAttributes');
     }
     invokeFunction(settings, currentItem, request) {
         this.mockDynamoDB(settings, currentItem);
-        const interceptors = this.mockProfileAPI(settings, currentItem);
+        const interceptors = this.mockProfileAPI(settings, currentItem)
+            .concat(this.mockDeviceAddressAPI(settings, currentItem));
         return lambdaLocal.execute({
             event: request,
             lambdaFunc: settings,
@@ -300,6 +302,36 @@ class AlexaTest {
         }
         return [
             nameInterceptor, givenNameInterceptor, emailInterceptor, mobileNumberInterceptor, distanceUnitInterceptor, temperatureUnitInterceptor, timeZoneInterceptor,
+        ];
+    }
+    mockDeviceAddressAPI(settings, currentItem) {
+        const deviceAddressMock = nock('https://api.amazonalexa.com').persist();
+        const countryPostalCodeInterceptor = deviceAddressMock.get(`/v1/devices/${settings.deviceId}/settings/address/countryAndPostalCode`);
+        const fullAddressInterceptor = deviceAddressMock.get(`/v1/devices/${settings.deviceId}/settings/address`);
+        if (currentItem.withDeviceAddress && (currentItem.withDeviceAddress.countryCode || currentItem.withDeviceAddress.postalCode)) {
+            countryPostalCodeInterceptor.reply(200, () => {
+                return JSON.stringify({
+                    countryCode: currentItem.withDeviceAddress.countryCode,
+                    postalCode: currentItem.withDeviceAddress.postalCode,
+                });
+            });
+        }
+        else {
+            countryPostalCodeInterceptor.reply(401, {});
+        }
+        if (currentItem.withDeviceAddress && (currentItem.withDeviceAddress.addressLine1 || currentItem.withDeviceAddress.addressLine2 ||
+            currentItem.withDeviceAddress.addressLine3 || currentItem.withDeviceAddress.city ||
+            currentItem.withDeviceAddress.countryCode || currentItem.withDeviceAddress.districtOrCounty ||
+            currentItem.withDeviceAddress.postalCode || currentItem.withDeviceAddress.stateOrRegion)) {
+            fullAddressInterceptor.reply(200, () => {
+                return JSON.stringify(currentItem.withDeviceAddress);
+            });
+        }
+        else {
+            fullAddressInterceptor.reply(401, {});
+        }
+        return [
+            countryPostalCodeInterceptor, fullAddressInterceptor,
         ];
     }
 }
