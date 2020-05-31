@@ -2,10 +2,11 @@
 ## current master
 * feat: add `hasAskForPermissionsConsentCard` for requesting permissions
 * feat: add `hasLinkAccountCard` for account linking
-* fix: correct standard card error messages to say "standard card"
 * feat: support all UpsServiceClient calls by adding `distanceUnits`, `temperatureUnits`, and `timeZone` to `withProfile`
 * feat: add `withDeviceAddress` option to test DeviceAddressAPI
 * feat: add Geolocation interface
+* feat: add `withPermissions` to test permissions granted and denied
+* fix: correct standard card error messages to say "standard card"
 
 ## 2.4.0
 * update libraries

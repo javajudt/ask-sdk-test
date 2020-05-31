@@ -15,6 +15,8 @@ export interface SkillSettings {
     locale : string;
     /** the interfaces present for the test */
     interfaces? : InterfaceSettings;
+    /** the user-granted permissions present for the test */
+    permissions? : PermissionSettings;
     /** true to print the response to the console */
     debug? : boolean;
 }
@@ -25,6 +27,21 @@ export interface InterfaceSettings {
     video? : boolean;
     apl? : boolean;
     geolocation? : interfaces.geolocation.GeolocationState;
+}
+
+export interface PermissionSettings {
+    shortAddress? : boolean;
+    fullAddress? : boolean;
+    geolocation? : boolean;
+    reminders? : boolean;
+    notifications? : boolean;
+    listsRead? : boolean;
+    listsWrite? : boolean;
+    personId? : boolean;
+    email? : boolean;
+    phoneNumber? : boolean;
+    firstName? : boolean;
+    fullName? : boolean;
 }
 
 export interface SequenceItem {
